@@ -22,8 +22,10 @@ INSTALLED_APPS = [
     # inst_apps
     'ckeditor',
     'rest_framework',
+    'drf_yasg',
     # my_apps
     'account',
+    'core',
 ]
 
 MIDDLEWARE = [
