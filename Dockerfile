@@ -1,13 +1,22 @@
-FROM python:3.8.10
+FROM python:3.10-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONIOENCODING UTF-8
+ENV TZ=Asia/Bishkek
 
-WORKDIR /app
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY requirements.txt /app/
+WORKDIR /usr/src/app
+
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir --upgrade setuptools
+
+
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/
+RUN mkdir static && mkdir media && mkdir logs
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+COPY . .
+
+EXPOSE 8000
