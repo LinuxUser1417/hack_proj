@@ -9,7 +9,8 @@ __pycache__/
 venv/
 env/
 *.env
-
+media/
+static/
 
 settings.ini
 *.log

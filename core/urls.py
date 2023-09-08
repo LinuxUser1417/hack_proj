@@ -1,17 +1,20 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Argen API",
-        default_version='v1',
-        description="Argen like black boys",
-        terms_of_service="https://www.yourapp.com/terms/",
-        contact=openapi.Contact(email="contact@yourapp.com"),
-        license=openapi.License(name="Argen License.inc"),
+        title="MarketPlace",
+        default_version='v2',
+        description="I like black boys(big black boys)",
+        terms_of_service="https://www.hahahahahahahahahahahahahaha.com/",
+        contact=openapi.Contact(email="sanzarmaratov588@gmail.com"),
+        license=openapi.License(name="Sanjik License.inc"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -19,11 +22,16 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('account.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    
-    # Определение URL-шаблонов Swagger внутри urls.py
-    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-]
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('accounts/', include('allauth.urls')),
+    path('', include('apps.users.urls')),
+    # path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('login/', TokenObtainPairView.as_view(), name='token_obrain_pair'),
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+            document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+            document_root=settings.MEDIA_ROOT)
