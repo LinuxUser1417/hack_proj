@@ -133,6 +133,7 @@ REST_FRAMEWORK = {
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
+
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT', 'Bearer', 'Token'),
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
@@ -188,3 +189,17 @@ LOGGING = {
         },
     },
 }
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'SERIALIZERS': {},
+}
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = config('EMAIL_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('USE_TLS', cast=bool)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

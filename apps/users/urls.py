@@ -1,13 +1,13 @@
 from rest_framework import routers
 from django.urls import path, include
-from .views import RegisterView, ChangePasswordView, UserViewSet
+from .views import CategoryViewSet, ShopViewSet, UserViewSet
 
 router = routers.DefaultRouter()
-router.register('users', UserViewSet, basename='users')
+router.register('profile', UserViewSet, basename='profile')
+router.register('shops', ShopViewSet, basename='shop')
+router.register('categories', CategoryViewSet, basename='category')
 
 urlpatterns = [
             path('', include(router.urls)),
-            path('registration/', RegisterView.as_view(), name='register'),
-            path('change-password/', ChangePasswordView.as_view(), name='change_password'),
             ]
 
