@@ -8,6 +8,8 @@ class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+        read_only_fields = ('password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'password_reset_code', 'groups', 'user_permissions')
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -18,3 +20,4 @@ class ShopSerializer(serializers.ModelSerializer):
         model = Shop
         fields = '__all__'
         read_only_fields = ('id', 'user', 'rating', 'verified')
+

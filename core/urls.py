@@ -5,7 +5,6 @@ from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -26,8 +25,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('', include('apps.users.urls')),
     path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt'))
-
+    path('auth/', include('djoser.urls.jwt')),
     ]
 
 if settings.DEBUG:

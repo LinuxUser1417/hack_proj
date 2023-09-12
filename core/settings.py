@@ -193,7 +193,11 @@ CORS_ALLOWED_ORIGINS = [
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'user': 'apps.users.serializers.UsersSerializer',
+        'user_create': 'apps.users.serializers.UsersSerializer',
+        'current_user': 'apps.users.serializers.UsersSerializer',},
+    'LOGIN_FIELD': 'email',
 }
 
 

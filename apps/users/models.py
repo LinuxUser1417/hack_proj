@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -48,8 +48,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username' 
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email' 
+    REQUIRED_FIELDS = []
 
     def has_module_perms(self, app_label):
         return self.is_staff
@@ -78,7 +78,6 @@ class Shop(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
     location = models.CharField(max_length=200)
-    policy = models.TextField()
 
     CHOICES = [
         (1,1),
