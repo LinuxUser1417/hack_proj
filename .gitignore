@@ -9,7 +9,9 @@ __pycache__/
 venv/
 env/
 *.env
-
+media/
+static/
+users/
 
 settings.ini
 *.log
@@ -18,3 +20,6 @@ dist/
 build/
 *.egg-info/
 *.egg
+
+.swo
+.swp
