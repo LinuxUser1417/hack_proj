@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    passport = models.CharField(max_length=10, verbose_name="Паспорт")
+    passport = models.CharField(max_length=10, verbose_name="Паспорт", null=True, blank=True)
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия')
     surname = models.CharField(max_length=50, verbose_name='Отчество')
