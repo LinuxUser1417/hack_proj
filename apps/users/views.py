@@ -194,3 +194,5 @@ class CustomUserViewSet(DjoserViewSet):
     @action(["post"], detail=False, url_path=f"reset_{User.USERNAME_FIELD}_confirm")
     def reset_username_confirm(self, request, *args, **kwargs):
         return super().reset_username_confirm(request, *args, **kwargs)
+
+    
