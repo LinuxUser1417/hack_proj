@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Types, Product, ProductImage, ProductVideo, Review, ReviewImage
+from .models import Types, Product, ProductImage, ProductVideo, Review, ReviewImage, Favorite
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,6 +27,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+        read_only_fields = ('user', 'creater_at', 'rating')
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        review = Review.objects.create(user=user, **validated_data)
+        return review
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
@@ -43,3 +49,15 @@ class ProductSerializer(serializers.ModelSerializer):
         shop = user.shop
         product = Product.objects.create(shop=shop, **validated_data)
         return product
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = '__all__'
+        read_only_fields = ('user',)
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        favorite = Favorite.objects.create(user=user, **validated_data)
+        return favorite

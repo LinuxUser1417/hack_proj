@@ -21,3 +21,7 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'user', 'rating', 'verified')
 
+    def create(self, validated_data):
+        user = self.context.get('user')
+        shop = Shop.objects.create(user=user, **validated_data)
+        return shop

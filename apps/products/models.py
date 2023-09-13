@@ -1,8 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 from apps.users.models import Shop
 
+User = get_user_model()
 class Types(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
@@ -24,7 +26,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     category = models.ForeignKey(Types, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField(default=2)
     created_at = models.DateTimeField(auto_now_add=True)
     # installment_plan = models.BooleanField(default=False)
     # delivery = models.BooleanField(default=False)
@@ -55,7 +57,7 @@ class Review(models.Model):
     product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     comment = models.TextField()
-    pub_date = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     rating = models.PositiveIntegerField()
 
     def __str__(self):
@@ -68,3 +70,12 @@ class ReviewImage(models.Model):
 
     def __str__(self):
         return self.review.product.name + ' Review Image'
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} - {self.product.name}'

@@ -62,13 +62,16 @@ class ShopViewSet(ModelViewSet):
     @swagger_auto_schema(operation_summary="Зарегистрировать новый магазин", operation_description="Эндпоинт для регистрации нового магазина. Необходимо передать токен пользователя и данные нового магазина.")
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def register_shop(self, request):
-        user = self.request.user
-        serializer = ShopSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            shop = serializer.save(user=user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not request.user.is_authenticated:
+            return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Передаём user в context сериализатора
+        serializer = self.get_serializer(data=request.data, context={'user': request.user})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
     @swagger_auto_schema(operation_summary="Получить список всех магазинов", operation_description="Эндпоинт для просмотра списка всех магазинов.")
     def list(self, request, *args, **kwargs):
