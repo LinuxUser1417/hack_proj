@@ -7,6 +7,7 @@ from apps.users.models import Shop
 User = get_user_model()
 class Types(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    photo = models.ImageField(upload_to='categories/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -15,6 +16,7 @@ class Types(models.Model):
 class UnderTypes(models.Model):
     name = models.CharField(max_length=200)
     category = models.ForeignKey(Types, on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to='categories/', null=True, blank=True)
 
 # class Sticker(models.Model):
 #     name = models.CharField(max_length=100)
