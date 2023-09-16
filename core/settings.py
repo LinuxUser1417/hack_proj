@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     #my apps
     'apps.users',
     'apps.products',
-    'apps.userprofile',
+    # 'apps.userprofile',
 ]
 
 MIDDLEWARE = [
@@ -164,6 +164,26 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'djoser': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
@@ -198,7 +218,8 @@ DJOSER = {
     'SERIALIZERS': {
         'user': 'apps.users.serializers.UsersSerializer',
         'user_create': 'apps.users.serializers.UsersSerializer',
-        'current_user': 'apps.users.serializers.UsersSerializer',},
+        'current_user': 'apps.users.serializers.UsersSerializer',
+        },
     'LOGIN_FIELD': 'email',
 }
 

@@ -6,6 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
 
+from django.contrib.auth import authenticate, login
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+
+
 from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
@@ -23,10 +30,36 @@ class UserViewSet(ModelViewSet):
         user = self.request.user
         serializer = UsersSerializer(user)
         return Response(serializer.data)
+    
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def custom_login(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
 
+    user = authenticate(email=email, password=password)
 
+    if user is not None:
+        login(request, user)
+        return Response({"message": "Успешный вход!"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Неверные учетные данные."}, status=status.HTTP_400_BAD_REQUEST)
+    
 
+    
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = UsersSerializer
+
+    @swagger_auto_schema(request_body=UsersSerializer)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'user_id': user.id}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer

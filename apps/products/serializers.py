@@ -1,9 +1,14 @@
 from rest_framework import serializers
-from .models import Types, Product, ProductImage, ProductVideo, Review, ReviewImage, Favorite
+from .models import Types, Product, ProductImage, ProductVideo, Review, ReviewImage, Favorite, UnderTypes
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Types
+        fields = '__all__'
+
+class UnderTypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnderTypes
         fields = '__all__'
 
 class ProductImageSerializer(serializers.ModelSerializer):

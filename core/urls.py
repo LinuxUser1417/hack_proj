@@ -5,6 +5,7 @@ from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -27,7 +28,8 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('', include('apps.products.urls')),
-    path('', include('apps.userprofile.urls')),
+    path('login/', TokenObtainPairView.as_view(), name='token-create')
+    # path('', include('apps.userprofile.urls')),
     ]
 
 if settings.DEBUG:

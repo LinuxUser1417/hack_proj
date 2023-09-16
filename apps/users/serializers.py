@@ -4,12 +4,26 @@ from .models import Category, Shop
 
 User = get_user_model()
 
+from django.contrib.auth.hashers import make_password
+
 class UsersSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = User
         fields = '__all__'
-        read_only_fields = ('last_login', 'is_superuser', 'is_active', 'is_staff', 'password_reset_code', 'groups', 'user_permissions')
-        write_only_fields = ('password')
+        read_only_fields = ('last_login', 'is_superuser', 'is_active', 'is_staff', 'password_reset_code', 'groups', 'user_permissions', 'banned')
+
+    # def validate_password(self, value):
+    #     return make_password(value)
+    
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = super().create(validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

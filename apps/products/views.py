@@ -5,10 +5,10 @@ from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 
 from .models import (Product, ProductImage, ProductVideo, Review, ReviewImage, Favorite,
-                     Types)
+                     Types, UnderTypes)
 from .serializers import (ProductImageSerializer, ProductSerializer,
                           ProductVideoSerializer, ReviewImageSerializer,
-                          ReviewSerializer, TypeSerializer, FavoriteSerializer)
+                          ReviewSerializer, TypeSerializer, FavoriteSerializer, UnderTypesSerializer)
 
 
 class TypeViewSet(viewsets.ModelViewSet):
@@ -38,6 +38,35 @@ class TypeViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(operation_summary="Удалить тип", operation_description="Эндпоинт для удаления типа.")
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+
+class UnderTypesViewSet(viewsets.ModelViewSet):
+    queryset = UnderTypes.objects.all()
+    serializer_class = UnderTypesSerializer
+
+    @swagger_auto_schema(operation_summary="Получить список всех подкатегорий", operation_description="Эндпоинт для просмотра списка всех доступных подкатегорий.")
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="Создать новую подкатегорию", operation_description="Эндпоинт для создания новой подкатегории. Необходимо передать данные новой подкатегории.")
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="Получить детали определенной подкатегории", operation_description="Эндпоинт для просмотра деталей выбранной подкатегории.")
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="Обновить подкатегорию", operation_description="Эндпоинт для обновления данных подкатегории. Необходимо передать обновленные данные.")
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="Частично обновить подкатегорию", operation_description="Эндпоинт для частичного обновления данных подкатегории. Необходимо передать данные для обновления.")
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="Удалить подкатегорию", operation_description="Эндпоинт для удаления подкатегории.")
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()

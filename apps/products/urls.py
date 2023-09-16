@@ -1,6 +1,6 @@
 from rest_framework import routers
 from django.urls import path, include
-from .views import TypeViewSet, ProductVideoViewSet, ProductViewSet, ProductImageViewSet, ReviewImageViewSet, ReviewViewSet, FavoriteViewSet
+from .views import TypeViewSet, ProductVideoViewSet, ProductViewSet, ProductImageViewSet, ReviewImageViewSet, ReviewViewSet, FavoriteViewSet, UnderTypesViewSet
 
 router = routers.DefaultRouter()
 router.register('favorite', FavoriteViewSet, basename='favorite')
@@ -10,5 +10,6 @@ router.register('shorts', ProductVideoViewSet, basename='short')
 router.register('images', ProductImageViewSet, basename='image')
 router.register('review', ReviewViewSet, basename='review')
 router.register('review/images', ReviewImageViewSet, basename='review-images')
+router.register('products/categories/undercategories', UnderTypesViewSet, basename='undertypes')
 
 urlpatterns = router.urls

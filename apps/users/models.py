@@ -31,7 +31,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, unique=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     passport = models.CharField(max_length=10, verbose_name="Паспорт", null=True, blank=True)
     first_name = models.CharField(max_length=50, verbose_name='Имя')
@@ -75,7 +75,7 @@ class Shop(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     TIN = models.CharField(max_length=14, unique=True)
     name = models.CharField(max_length=50)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ManyToManyField(Category)
     description = models.TextField()
     location = models.CharField(max_length=200)
 
