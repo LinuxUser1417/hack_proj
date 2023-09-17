@@ -14,7 +14,7 @@ from drf_yasg import openapi
 from apps.users.models import Category, Shop
 
 from .models import User
-from .serializers import (CategorySerializer, SetRatingSerializer, ShopSerializer,
+from .serializers import (CategorySerializer, SetRatingSerializer, ShopProfileSerializer, ShopSerializer,
                           UsersSerializer)
 
 User = get_user_model()
@@ -28,7 +28,51 @@ class UserViewSet(ModelViewSet):
         user = self.request.user
         serializer = UsersSerializer(user)
         return Response(serializer.data)
+
+class ShopProfileView(APIView):
+    permission_classes = [IsAuthenticated]
     
+    def get(self, request):
+        try:
+            shop = Shop.objects.get(user=request.user)
+            serializer = ShopProfileSerializer(shop)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Shop.DoesNotExist:
+            return Response({"error": "Магазин не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+class SetShopRating(APIView):
+
+    @swagger_auto_schema(
+        operation_summary="Обновление рейтинга пользователя",
+        operation_description="Установите рейтинг для пользователя",
+        request_body=SetRatingSerializer,
+        responses={
+            201: openapi.Response(description="Рейтинг успешно установлен", schema=SetRatingSerializer),
+            404: "Пользователь не найден",
+            400: "Неверный запрос"
+        },
+    )
+    def post(self, request, shop_id):
+        """
+        Установите рейтинг для пользователя. 
+        """
+        try:
+            shop = Shop.objects.get(pk=shop_id)
+        except Shop.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SetRatingSerializer(data=request.data)
+
+        if serializer.is_valid():
+            new_rating = serializer.validated_data["rating"]
+
+            shop.total_rating += new_rating
+            shop.rating_votes += 1
+            shop.rating = round(shop.total_rating / shop.rating_votes, 1)  
+
+            shop.save()
+
+            return Response({"rating": shop.rating}, status=status.HTTP_201_CREATED)
 
 class SetUserRating(APIView):
 

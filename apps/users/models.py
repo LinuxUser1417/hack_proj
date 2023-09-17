@@ -87,13 +87,11 @@ class Shop(models.Model):
     description = models.TextField()
     location = models.CharField(max_length=200)
 
-    CHOICES = [
-        (1,1),
-        (2,2),
-        (3,3),
-        (4,4),
-        (5,5)
-    ]
-
-    rating = models.SmallIntegerField(choices=CHOICES, default=5)
+    rating = models.DecimalField(
+        max_digits=2, decimal_places=1, 
+        choices=[(i / 10, f"{i / 10}") for i in range(10, 51, 5)],  
+        default=5
+    )
+    total_rating = models.DecimalField(max_digits=6, decimal_places=1, default=0.0)  
+    rating_votes = models.PositiveIntegerField(default=0)  
     verified = models.BooleanField(default=False)

@@ -1,6 +1,6 @@
 from rest_framework import routers
 from django.urls import path, include
-from .views import CategoryViewSet, SetUserRating, ShopViewSet, CustomUserViewSet, CustomTokenVerifyView, CustomTokenObtainPairView, CustomTokenRefreshView
+from .views import CategoryViewSet, SetShopRating, SetUserRating, ShopProfileView, ShopViewSet, CustomUserViewSet, CustomTokenVerifyView, CustomTokenObtainPairView, CustomTokenRefreshView
 
 router = routers.DefaultRouter()
 router.register('shops', ShopViewSet, basename='shop')
@@ -25,6 +25,8 @@ urlpatterns = [
             path('auth/jwt/refresh/', CustomTokenRefreshView.as_view(), name="jwt-refresh"),
             path('auth/jwt/verify/', CustomTokenVerifyView.as_view(), name="jwt-verify"),
             path('users/<int:user_id>/set_rating/', SetUserRating.as_view(), name="set-user-rating"),
+            path('shops/<int:shop_id>/set_rating/', SetShopRating.as_view(), name='set-shop-rating'),
+            path('shop/profile/', ShopProfileView.as_view(), name="shop-profile"),
 
             ]
 

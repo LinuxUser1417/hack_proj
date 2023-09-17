@@ -6,6 +6,22 @@ User = get_user_model()
 
 from django.contrib.auth.hashers import make_password
 
+
+class ShopProfileSerializer(serializers.ModelSerializer):
+    TIN = serializers.CharField(source="TIN")
+    user_fullname = serializers.SerializerMethodField()
+    email = serializers.EmailField(source="user.email")
+    birth_date = serializers.DateField(source="user.birth_date")
+    categories = serializers.StringRelatedField(source="category", many=True)
+    
+    class Meta:
+        model = Shop
+        fields = ["TIN", "user_fullname", "location", "email", "birth_date", "categories", "rating", "verified"]
+
+    def get_user_fullname(self, obj):
+        return f"{obj.user.first_name} {obj.user.surname} {obj.user.last_name}"
+    
+    
 class UsersSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
 
