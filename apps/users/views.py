@@ -43,8 +43,8 @@ class ShopProfileView(APIView):
 class SetShopRating(APIView):
 
     @swagger_auto_schema(
-        operation_summary="Обновление рейтинга пользователя",
-        operation_description="Установите рейтинг для пользователя",
+        operation_summary="Обновление рейтинга магазина",
+        operation_description="Установите рейтинг для магазина",
         request_body=SetRatingSerializer,
         responses={
             201: openapi.Response(description="Рейтинг успешно установлен", schema=SetRatingSerializer),
@@ -54,7 +54,7 @@ class SetShopRating(APIView):
     )
     def post(self, request, shop_id):
         """
-        Установите рейтинг для пользователя. 
+        Установите рейтинг для магазина. 
         """
         try:
             shop = Shop.objects.get(pk=shop_id)
