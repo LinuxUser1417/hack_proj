@@ -44,6 +44,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     bio = models.TextField(max_length=500, blank=True) # Доп. Инфо
     banned = models.BooleanField(default=False) # Флаг, указывающий, заблокирован ли пользователь
     password_reset_code = models.CharField(max_length=6, blank=True, null=True)
+    rating = models.DecimalField(
+        max_digits=2, decimal_places=1, 
+        choices=[(i / 10, f"{i / 10}") for i in range(10, 51, 5)],  
+        default=5
+    )
+    total_rating = models.DecimalField(max_digits=6, decimal_places=1, default=0.0)  
+    rating_votes = models.PositiveIntegerField(default=0)  
 
 
     objects = UserManager()
@@ -69,6 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    photo = models.ImageField(upload_to='categories/', null=True, blank=True)
 
 
 class Shop(models.Model):

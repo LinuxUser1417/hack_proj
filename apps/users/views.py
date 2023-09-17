@@ -1,23 +1,21 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from drf_yasg.utils import swagger_auto_schema
-
-from django.contrib.auth import authenticate, login
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-
-
 from djoser.views import UserViewSet as DjoserViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView, TokenVerifyView)
+from drf_yasg import openapi
 
 from apps.users.models import Category, Shop
-from .serializers import CategorySerializer, ShopSerializer, UsersSerializer
+
+from .models import User
+from .serializers import (CategorySerializer, SetRatingSerializer, ShopSerializer,
+                          UsersSerializer)
 
 User = get_user_model()
 
@@ -32,33 +30,40 @@ class UserViewSet(ModelViewSet):
         return Response(serializer.data)
     
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def custom_login(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
+class SetUserRating(APIView):
 
-    user = authenticate(email=email, password=password)
+    @swagger_auto_schema(
+        operation_summary="Обновление рейтинга пользователя",
+        operation_description="Установите рейтинг для пользователя",
+        request_body=SetRatingSerializer,
+        responses={
+            201: openapi.Response(description="Рейтинг успешно установлен", schema=SetRatingSerializer),
+            404: "Пользователь не найден",
+            400: "Неверный запрос"
+        },
+    )
+    def post(self, request, user_id):
+        """
+        Установите рейтинг для пользователя. 
+        """
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if user is not None:
-        login(request, user)
-        return Response({"message": "Успешный вход!"}, status=status.HTTP_200_OK)
-    else:
-        return Response({"error": "Неверные учетные данные."}, status=status.HTTP_400_BAD_REQUEST)
-    
+        serializer = SetRatingSerializer(data=request.data)
 
-    
-class RegisterView(APIView):
-    permission_classes = [AllowAny]
-    serializer_class = UsersSerializer
-
-    @swagger_auto_schema(request_body=UsersSerializer)
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            return Response({'user_id': user.id}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            new_rating = serializer.validated_data["rating"]
+
+            user.total_rating += new_rating
+            user.rating_votes += 1
+            user.rating = round(user.total_rating / user.rating_votes, 1)  
+
+            user.save()
+
+            return Response({"rating": user.rating}, status=status.HTTP_201_CREATED)
+    
     
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()

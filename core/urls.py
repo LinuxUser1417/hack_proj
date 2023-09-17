@@ -28,8 +28,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('', include('apps.products.urls')),
-    path('login/', TokenObtainPairView.as_view(), name='token-create')
-    # path('', include('apps.userprofile.urls')),
     ]
 
 if settings.DEBUG:
