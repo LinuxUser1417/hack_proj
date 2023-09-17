@@ -32,6 +32,11 @@ class UserViewSet(ModelViewSet):
 class ShopProfileView(APIView):
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(
+        operation_summary="Просмотр своего магазина (профиль)",
+        operation_description="Профиль магазина",
+        # query_serializer=ShopProfileSerializer,
+    )
     def get(self, request):
         try:
             shop = Shop.objects.get(user=request.user)

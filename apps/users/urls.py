@@ -26,7 +26,7 @@ urlpatterns = [
             path('auth/jwt/verify/', CustomTokenVerifyView.as_view(), name="jwt-verify"),
             path('users/<int:user_id>/set_rating/', SetUserRating.as_view(), name="set-user-rating"),
             path('shops/<int:shop_id>/set_rating/', SetShopRating.as_view(), name='set-shop-rating'),
-            path('shop/profile/', ShopProfileView.as_view(), name="shop-profile"),
+            path('shops/profile/', ShopProfileView.as_view(), name="shop-profile"),
 
             ]
 
