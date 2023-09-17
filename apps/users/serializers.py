@@ -21,7 +21,7 @@ class ShopProfileSerializer(serializers.ModelSerializer):
     def get_user_fullname(self, obj):
         return f"{obj.user.first_name} {obj.user.surname} {obj.user.last_name}"
     
-    
+
 class UsersSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
 
@@ -56,7 +56,7 @@ class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
         fields = '__all__'
-        read_only_fields = ('id', 'user', 'rating', 'verified')
+        read_only_fields = ('id', 'user', 'rating', 'verified', 'rating', 'total_rating', 'rating_votes')
 
     def create(self, validated_data):
         user = self.context.get('user')
